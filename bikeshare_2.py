@@ -84,18 +84,28 @@ def time_stats(df):
 
     # display the most common month
     # most_common_month_num = df["Start Time"].dt.month.value_counts().idxmax()
-    most_common_month_num = df["Start Time"].dt.month.mode().item()
-    most_common_month = Months(most_common_month_num).name
+    try:
+        most_common_month_num = df["Start Time"].dt.month.mode().item()
+        most_common_month = Months(most_common_month_num).name
+    except ValueError:
+        most_common_month = "NA"
+    
     print("Most Common Month:", most_common_month)
 
     # display the most common day of week
     # most_common_day = df["Start Time"].dt.day_name().value_counts().idxmax()
-    most_common_day = df["Start Time"].dt.day_name().mode().item()
+    try:
+        most_common_day = df["Start Time"].dt.day_name().mode().item()
+    except ValueError:
+        most_common_day = "NA"
     print("Most Common Day of the Week:", most_common_day)
 
     # display the most common start hour
     # most_common_hour = df["Start Time"].dt.hour.value_counts().idxmax()
-    most_common_hour = df["Start Time"].dt.hour.mode().item()
+    try:
+        most_common_hour = df["Start Time"].dt.hour.mode().item()
+    except ValueError:
+        most_common_hour = "NA"
     print("Most Common Start Hour:", most_common_hour)
 
     print("\nThis took %s seconds." % (time.time() - start_time))
@@ -109,11 +119,17 @@ def station_stats(df):
     start_time = time.time()
 
     # display most commonly used start station
-    most_common_start_station = df["Start Station"].apply(lambda x: x.strip()).mode().item()
+    try:
+        most_common_start_station = df["Start Station"].apply(lambda x: x.strip()).mode().item()
+    except ValueError:
+        most_common_start_station = "NA"
     print("Most Commonly Used Start Station:", most_common_start_station)
 
     # display most commonly used end station
-    most_common_end_station = df["End Station"].apply(lambda x: x.strip()).mode().item()
+    try:
+        most_common_end_station = df["End Station"].apply(lambda x: x.strip()).mode().item()
+    except ValueError:
+        most_common_end_station = "NA"
     print("Most Commonly Used End Station:", most_common_end_station)
 
     # display most frequent combination of start station and end station trip
@@ -122,7 +138,10 @@ def station_stats(df):
     df = df[df["Start Station"].notna() & df["End Station"].notna()]
 
     df["Start End Station"] = df["Start Station"] + "**" + df["End Station"]
-    most_common_start_end_combo = df["Start End Station"].mode().item()
+    try:
+        most_common_start_end_combo = df["Start End Station"].mode().item()
+    except ValueError:
+        most_common_start_end_combo = "NA**"
     print("Most Frequent Combination of Start Station and End Station Trip", most_common_start_end_combo.split("**"))
 
     print("\nThis took %s seconds." % (time.time() - start_time))
